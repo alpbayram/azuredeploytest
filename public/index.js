@@ -9,6 +9,8 @@ const phone = document.querySelector("#phone");
 const emptyText = document.querySelector("#empty");
 const modal = document.querySelector("#modal");
 const alertBlock = document.querySelector("#alert");
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js'
+import { getDatabase,ref,set,child,update,remove,onValue,get,query, orderByChild,equalTo } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
 
 contactBtn.addEventListener('click', async function (e) {
   e.preventDefault();
@@ -35,6 +37,7 @@ contactBtn.addEventListener('click', async function (e) {
       let count = contactTableContent.childElementCount + 1;
 
       for (let i = 0; i < contacts.length; i++) {
+        alert("Your first contact: " + contacts[i].name + " " + contacts[i].tel + " " + contacts[i].address);
         const organizer = document.createElement('tr');
         organizer.classList.add('list-group-item');
 
@@ -50,6 +53,7 @@ contactBtn.addEventListener('click', async function (e) {
         const tel = document.createElement('td');
         tel.innerHTML = contacts[i].tel[0];
         organizer.appendChild(tel);
+		alert(tel);
 
         contactTableContent.appendChild(organizer);
       }
@@ -117,4 +121,31 @@ addBtn.addEventListener('click', function (e) {
 
   name.value = "";
   phone.value = "";
+
+
+
+
+
+const config = {
+apiKey: "{{config('services.firebase.apiKey')}}",
+authDomain: "{{config('services.firebase.authDomain')}}",
+databaseURL: "{{config('services.firebase.databaseURL')}}",
+projectId: "{{config('services.firebase.projectId')}}",
+storageBucket: "{{config('services.firebase.storageBucket')}}",
+messagingSenderId: "{{config('services.firebase.messagingSenderId')}}",
+appId: "{{config('services.firebase.appId')}}",
+measurementId: "{{config('services.firebase.measurementId')}}"
+};
+
+const app = initializeApp(config);
+
+const db = getDatabase();
+
+function writeUserData( name, tel, address) {
+set(ref(db, 'users/' + name), {
+name: name,
+tel: tel,
+address : address
+});
+}
 });
